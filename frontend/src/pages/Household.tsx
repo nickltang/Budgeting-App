@@ -3,7 +3,7 @@ import { ErrorToast } from '../components/ErrorToast';
 import { useDataStore } from '../stores/dataStore';
 import { BudgetProgress } from '../components/BudgetProgress';
 import { PartnerDetailModal } from '../components/PartnerDetailModal';
-import type { Budget, Goal, Transaction, Partner } from '../types';
+import type { Partner } from '../types';
 
 export function Household() {
   const {

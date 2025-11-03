@@ -18,7 +18,6 @@ export function PartnerDetailModal({
   onClose,
 }: PartnerDetailModalProps) {
   const today = new Date();
-  const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
 
   // Filter transactions for current month (in a real app, these would be filtered by partner/userId)
