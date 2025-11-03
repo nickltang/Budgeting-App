@@ -300,15 +300,31 @@ func (ds *DataStore) getNextID() string {
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.GetHeader("Origin")
-		if origin == "http://localhost:5173" {
+
+		// Allow localhost, ngrok, and netlify URLs
+		allowed := origin == "http://localhost:5173" ||
+			strings.Contains(origin, "ngrok") ||
+			strings.Contains(origin, "netlify.app") ||
+			origin == "https://homebudgetapp1.netlify.app"
+
+		// Always set CORS headers for allowed origins (required when credentials: 'include' is used)
+		// CRITICAL: Must use exact origin, NOT wildcard, when credentials: 'include' is used
+		if allowed && origin != "" {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
-			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			// Log for debugging (remove in production)
+			log.Printf("CORS: Allowed origin %s for %s %s", origin, c.Request.Method, c.Request.URL.Path)
+		} else if origin != "" {
+			// Log blocked origins for debugging
+			log.Printf("CORS: Blocked origin %s for %s %s", origin, c.Request.Method, c.Request.URL.Path)
 		}
 
+		// Handle preflight OPTIONS request - must return CORS headers before aborting
 		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
+			c.AbortWithStatus(http.StatusNoContent)
 			return
 		}
 

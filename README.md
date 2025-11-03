@@ -146,7 +146,11 @@ go build -o server main.go
    netlify deploy --prod
    ```
 
-See `DEPLOYMENT.md` for detailed deployment instructions.
+See `DEPLOYMENT.md` for detailed Netlify deployment instructions.
+
+See `EC2_DEPLOYMENT.md` for AWS EC2 backend deployment with cost-effective options.
+
+See `NGROK_SETUP.md` for using ngrok to expose local backend (quick development/testing solution).
 
 ## Next Steps
 
